@@ -175,14 +175,22 @@ export class RoutesStorage {
       );
     }
 
+    if (_.has(route, 'uuid')) {
+      return ResponseStatus.createErrorStatus(
+        'Route UUID is already set',
+        RESPONSE_CODE.ERR_UUID_ALREADY_SET,
+      );
+    }
+
     const updated = {
       ...existing,
       ...route,
     };
 
-    if (!TRoute.guard(updated)) {
+    // Works for 'flat' interfaces like Route
+    if (!_.isEqual(_.keys(updated), _.keys(existing))) {
       return ResponseStatus.createErrorStatus(
-        'Route update data is not a partial route',
+        'Route update data is not a partial route configuration',
         RESPONSE_CODE.ERR_ROUTE_OBJECT_EXPECTED,
       );
     }
