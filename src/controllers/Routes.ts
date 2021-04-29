@@ -23,7 +23,7 @@ export class RoutesController {
   }
 
   @Put('/routes/:uuid')
-  put(@Param('uuid') uuid: string, @Body() route: Partial<Route>) {
+  put(@Param('uuid') uuid: string, @Body({ required: true }) route: Partial<Omit<Route, 'uuid'>>) {
     return routesStorage.updateRoute(uuid, route);
   }
 

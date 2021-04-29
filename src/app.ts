@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import {useExpressServer} from 'routing-controllers';
 
 import {RoutesController} from './controllers/Routes';
+import {GlobalErrorHandler} from './global-error-handler';
+import {LoggerMiddleware} from './logger';
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(express.json());
 useExpressServer(app, {
   routePrefix: '/api',
   controllers: [RoutesController],
+  middlewares: [LoggerMiddleware, GlobalErrorHandler],
+  defaultErrorHandler: false
 });
 
 const port = process.env.PORT;
