@@ -1,11 +1,11 @@
-import {Controller, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
+import {JsonController, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
 
 import {Route} from '../types';
 import {RoutesStorage} from '../storage/routes-storage';
 
 const routesStorage = new RoutesStorage();
 
-@Controller()
+@JsonController()
 export class RoutesController {
   @Get('/routes')
   getAll() {
