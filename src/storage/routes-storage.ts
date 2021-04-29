@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {v4 as uuidv4} from 'uuid';
-import {RESPONSE_CODE, Route, ResponseStatus} from '../types';
+import {RESPONSE_CODE, Route, TRoute, ResponseStatus} from '../types';
 import {Ipv4Helper} from './ipv4-helper';
 
 export class RoutesStorage {
@@ -127,9 +127,9 @@ export class RoutesStorage {
   }
 
   public addRoute(route: Omit<Route, 'uuid'>): ResponseStatus<{uuid} | never> {
-    if (!_.isObject(route)) {
+    if (!TRoute.omit('uuid').guard(route)) {
       return ResponseStatus.createErrorStatus(
-        'Object expected',
+        'Route expected',
         RESPONSE_CODE.ERR_OBJECT_EXPECTED,
       );
     }
