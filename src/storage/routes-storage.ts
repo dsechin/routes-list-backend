@@ -129,8 +129,8 @@ export class RoutesStorage {
   public addRoute(route: Omit<Route, 'uuid'>): ResponseStatus<{uuid} | never> {
     if (!TRoute.omit('uuid').guard(route)) {
       return ResponseStatus.createErrorStatus(
-        'Route expected',
-        RESPONSE_CODE.ERR_OBJECT_EXPECTED,
+        'Route object expected',
+        RESPONSE_CODE.ERR_ROUTE_OBJECT_EXPECTED,
       );
     }
 
@@ -168,10 +168,24 @@ export class RoutesStorage {
       );
     }
 
+    if (_.isEmpty(route)) {
+      return ResponseStatus.createErrorStatus(
+        'Route update data is empty',
+        RESPONSE_CODE.ERR_NO_DATA,
+      );
+    }
+
     const updated = {
       ...existing,
       ...route,
     };
+
+    if (!TRoute.guard(updated)) {
+      return ResponseStatus.createErrorStatus(
+        'Route update data is not a partial route',
+        RESPONSE_CODE.ERR_ROUTE_OBJECT_EXPECTED,
+      );
+    }
 
     const validatorResponse = this.validateRoute(updated);
 
