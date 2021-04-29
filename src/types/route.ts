@@ -1,4 +1,4 @@
-import { Static, String, Record } from 'runtypes';
+import {Static, String, Record} from 'runtypes';
 
 export const TRoute = Record({
   uuid: String,
