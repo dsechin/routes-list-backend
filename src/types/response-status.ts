@@ -18,10 +18,12 @@ export class ResponseStatus<T> implements IResponseStatus<T> {
     this.payload = payload;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   public static createSuccessStatus<T>(message: string, code: RESPONSE_CODE, payload: T | null = null) {
     return new ResponseStatus(message, code, true, payload);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   public static createErrorStatus<T>(message: string, code: RESPONSE_CODE, payload: T | null = null) {
     return new ResponseStatus(message, code, false, payload);
   }

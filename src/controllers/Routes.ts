@@ -1,4 +1,4 @@
-import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
+import {Controller, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
 
 import {Route} from '../types';
 import {RoutesStorage} from '../storage/routes-storage';

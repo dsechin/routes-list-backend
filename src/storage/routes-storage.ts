@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {RESPONSE_CODE, Route, ResponseStatus} from '../types';
 import {Ipv4Helper} from './ipv4-helper';
 
@@ -83,6 +83,6 @@ export class RoutesStorage {
       `Route created: "${uuid}"`,
       RESPONSE_CODE.ROUTE_CREATED,
       {uuid},
-    )
+    );
   }
 }
