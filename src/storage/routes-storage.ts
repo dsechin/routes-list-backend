@@ -164,4 +164,35 @@ export class RoutesStorage {
       {uuid},
     );
   }
+
+  public hasRouteForIp(ip: string): ResponseStatus<{via: Route | null; routed: boolean} | never> {
+    if (!Ipv4Helper.isIpV4(ip)) {
+      return ResponseStatus.createErrorStatus(
+        `Invalid IPv4 passed: ${ip}`,
+        RESPONSE_CODE.ERR_INVALID_IPV4,
+      );
+    }
+
+    const viaRoute = _.find(this._routes, route => Ipv4Helper.isIpInNet(ip, route.address, route.mask));
+
+    if (!viaRoute) {
+      return ResponseStatus.createSuccessStatus(
+        `No route for ${ip}`,
+        RESPONSE_CODE.IP_UNROUTED,
+        {
+          via: null,
+          routed: false,
+        },
+      );
+    }
+
+    return ResponseStatus.createSuccessStatus(
+      `Found route for ${ip}`,
+      RESPONSE_CODE.IP_ROUTED,
+      {
+        via: viaRoute,
+        routed: true,
+      },
+    );
+  }
 }

@@ -17,13 +17,18 @@ export class RoutesController {
     return routesStorage.getByUuid(uuid);
   }
 
+  @Get('/routes/for-ip/:ip')
+  hasRouteForIp(@Param('ip') ip: string) {
+    return routesStorage.hasRouteForIp(ip);
+  }
+
   @Post('/routes')
-  post(@Body() route: Omit<Route, 'uuid'>) {
+  create(@Body() route: Omit<Route, 'uuid'>) {
     return routesStorage.addRoute(route);
   }
 
   @Put('/routes/:uuid')
-  put(@Param('uuid') uuid: string, @Body({required: true}) route: Partial<Omit<Route, 'uuid'>>) {
+  update(@Param('uuid') uuid: string, @Body({required: true}) route: Partial<Omit<Route, 'uuid'>>) {
     return routesStorage.updateRoute(uuid, route);
   }
 
