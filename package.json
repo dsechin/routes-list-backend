@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/dsechin/routes-list-backend/issues"
   },
-  "homepage": "https://github.com/dsechin/routes-list-backend#readme"
+  "homepage": "https://github.com/dsechin/routes-list-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0"
+  }
 }
