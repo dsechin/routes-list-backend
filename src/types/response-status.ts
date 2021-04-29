@@ -15,6 +15,7 @@ export class ResponseStatus<T> implements IResponseStatus<T> {
   ) {
     this.message = message;
     this.code = code;
+    this.successful = successful;
     this.payload = payload;
   }
 

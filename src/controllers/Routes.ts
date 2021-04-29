@@ -14,7 +14,7 @@ export class RoutesController {
 
   @Get('/routes/:uuid')
   getOne(@Param('uuid') uuid: string) {
-    return routesStorage.findByUuid(uuid);
+    return routesStorage.getByUuid(uuid);
   }
 
   @Post('/routes')
@@ -22,21 +22,13 @@ export class RoutesController {
     return routesStorage.addRoute(route);
   }
 
-  //   @Put('/routes/:id')
-  //   put(@Param('id') id: number, @Body() user: any) {
-  //     return 'Updating a user...';
-  //   }
+  @Put('/routes/:uuid')
+  put(@Param('uuid') uuid: string, @Body() route: Partial<Route>) {
+    return routesStorage.updateRoute(uuid, route);
+  }
 
-  // @Delete('/routes/:uuid')
-  // remove(@Param('uuid') uuid: string) {
-  //   const index = _.findIndex(routes, item => item.uuid === uuid);
-
-  //   if (index === -1) {
-  //     return ErrorResponse.create(`Route with uuid "${uuid}" not found`, RESPONSE_CODE.ERR_NOT_FOUND);
-  //   }
-
-  //   routes.slice(index, 1);
-
-  //   return SuccessResponse.create(`Route with uuid "${uuid}" deleted`);
-  // }
+  @Delete('/routes/:uuid')
+  remove(@Param('uuid') uuid: string) {
+    return routesStorage.removeRoute(uuid);
+  }
 }

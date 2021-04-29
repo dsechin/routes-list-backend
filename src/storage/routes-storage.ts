@@ -15,8 +15,47 @@ export class RoutesStorage {
     return _.get(existing, 'uuid', null);
   }
 
-  public findByUuid(uuid: string): ResponseStatus<{route: Route} | never> {
-    const existing = _.find(this._routes, item => item.uuid === uuid);
+  private findByUuid(uuid: string): Route | null {
+    return _.find(this._routes, item => item.uuid === uuid);
+  }
+
+  private findIndexByUuid(uuid: string): number {
+    return _.findIndex(this._routes, item => item.uuid === uuid);
+  }
+
+  private validateRoute(route: Omit<Route, 'uuid'>): ResponseStatus<{uuid} | never> {
+    const ipProps = ['address', 'gateway'];
+    const invalidProp = _.find(ipProps, prop => !Ipv4Helper.isIpV4(route[prop]));
+
+    if (invalidProp) {
+      return ResponseStatus.createErrorStatus(
+        `Invalid IPv4 passed as ${invalidProp}: ${route[invalidProp]}`,
+        RESPONSE_CODE.ERR_INVALID_IPV4,
+      );
+    }
+
+    if (!this._validMasks.includes(route.mask)) {
+      return ResponseStatus.createErrorStatus(
+        `Invalid subnet mask: ${route.mask}`,
+        RESPONSE_CODE.ERR_INVALID_NETMASK,
+      );
+    }
+
+    if (!Ipv4Helper.isNet(route.address, route.mask)) {
+      return ResponseStatus.createErrorStatus(
+        `Invalid subnet: ${route.address}/${route.mask}`,
+        RESPONSE_CODE.ERR_INVALID_SUBNET,
+      );
+    }
+
+    return ResponseStatus.createSuccessStatus(
+      'Route is valid',
+      RESPONSE_CODE.ROUTE_IS_VALID,
+    );
+  }
+
+  public getByUuid(uuid: string): ResponseStatus<{route: Route} | never> {
+    const existing = this.findByUuid(uuid);
 
     if (!existing) {
       return ResponseStatus.createErrorStatus(
@@ -51,28 +90,10 @@ export class RoutesStorage {
       );
     }
 
-    const ipProps = ['address', 'gateway'];
-    const invalidProp = _.find(ipProps, prop => !Ipv4Helper.isIpV4(route[prop]));
+    const validatorResponse = this.validateRoute(route);
 
-    if (invalidProp) {
-      return ResponseStatus.createErrorStatus(
-        `Invalid IPv4 passed as ${invalidProp}: ${route[invalidProp]}`,
-        RESPONSE_CODE.ERR_INVALID_IPV4,
-      );
-    }
-
-    if (!this._validMasks.includes(route.mask)) {
-      return ResponseStatus.createErrorStatus(
-        `Invalid subnet mask: ${route.mask}`,
-        RESPONSE_CODE.ERR_INVALID_NETMASK,
-      );
-    }
-
-    if (!Ipv4Helper.isNet(route.address, route.mask)) {
-      return ResponseStatus.createErrorStatus(
-        `Invalid subnet: ${route.address}/${route.mask}`,
-        RESPONSE_CODE.ERR_INVALID_SUBNET,
-      );
+    if (!validatorResponse.successful) {
+      return validatorResponse;
     }
 
     const uuid = uuidv4();
@@ -82,6 +103,64 @@ export class RoutesStorage {
     return ResponseStatus.createSuccessStatus<{uuid: string}>(
       `Route created: "${uuid}"`,
       RESPONSE_CODE.ROUTE_CREATED,
+      {uuid},
+    );
+  }
+
+  public updateRoute(uuid: string, route: Partial<Route>): ResponseStatus<{uuid} | never> {
+    const existing = this.findByUuid(uuid);
+
+    if (!existing) {
+      return ResponseStatus.createErrorStatus(
+        `Route with uuid "${uuid}" not found`,
+        RESPONSE_CODE.ERR_NOT_FOUND,
+      );
+    }
+
+    const updated = {
+      ...existing,
+      ...route,
+    };
+
+    const validatorResponse = this.validateRoute(updated);
+
+    if (!validatorResponse.successful) {
+      return validatorResponse;
+    }
+
+    const index = this.findIndexByUuid(uuid);
+
+    if (index === -1) {
+      return ResponseStatus.createErrorStatus(
+        `Route with uuid "${uuid}" is missing`,
+        RESPONSE_CODE.ERR_NOT_FOUND,
+      );
+    }
+
+    this._routes[index] = updated;
+
+    return ResponseStatus.createSuccessStatus(
+      `Route with uuid "${uuid}" updated`,
+      RESPONSE_CODE.ROUTE_CHANGED,
+      {uuid},
+    );
+  }
+
+  public removeRoute(uuid: string): ResponseStatus<{uuid} | never> {
+    const index = this.findIndexByUuid(uuid);
+
+    if (index === -1) {
+      return ResponseStatus.createErrorStatus(
+        `Route with uuid "${uuid}" not found`,
+        RESPONSE_CODE.ERR_NOT_FOUND,
+      );
+    }
+
+    this._routes.splice(index, 1);
+
+    return ResponseStatus.createSuccessStatus(
+      `Route with uuid "${uuid}" deleted`,
+      RESPONSE_CODE.ROUTE_DELETED,
       {uuid},
     );
   }
