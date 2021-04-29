@@ -58,14 +58,6 @@ module.exports = {
               },
             },
           ],
-          '@typescript-eslint/naming-convention': [
-            'error',
-            {
-              'selector': 'variable',
-              'format': ['camelCase', 'UPPER_CASE'],
-              'filter': 'NDM',
-            },
-          ],
           '@typescript-eslint/no-empty-function': 'off',
           '@typescript-eslint/no-empty-interface': 'error',
           '@typescript-eslint/no-inferrable-types': [
