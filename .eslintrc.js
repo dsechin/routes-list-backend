@@ -11,10 +11,16 @@ module.exports = {
         '__dirname': true,
     },
     'extends': 'eslint:recommended',
+    'parser': '@typescript-eslint/parser',
     'parserOptions': {
-        'ecmaVersion': 12
+        'ecmaVersion': 12,
+        'sourceType': 'module',
     },
     'rules': {
+        'quotes': [
+          ERROR,
+          'single',
+        ],
         'linebreak-style': OFF,
         'no-loop-func': WARNING,
         'no-use-before-define': OFF,
@@ -71,7 +77,7 @@ module.exports = {
         'space-infix-ops': ERROR,
         'indent': [
             ERROR,
-            4,
+            2,
             {SwitchCase: 1}
         ],
         'one-var': OFF,
