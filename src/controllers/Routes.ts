@@ -1,4 +1,4 @@
-import {JsonController, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
+import {JsonController, QueryParam, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
 
 import {Route} from '../types';
 import {RoutesStorage} from '../storage/routes-storage';
@@ -18,8 +18,11 @@ export class RoutesController {
   }
 
   @Get('/routes/for-ip/:ip')
-  hasRouteForIp(@Param('ip') ip: string) {
-    return routesStorage.hasRouteForIp(ip);
+  getRouteForIp(
+    @QueryParam('most-specific') mostSpecific: boolean,
+    @Param('ip') ip: string,
+  ) {
+    return routesStorage.getRouteForIp(ip, mostSpecific);
   }
 
   @Post('/routes')

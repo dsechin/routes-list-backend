@@ -4,7 +4,58 @@ import {RESPONSE_CODE, Route, ResponseStatus} from '../types';
 import {Ipv4Helper} from './ipv4-helper';
 
 export class RoutesStorage {
-  private _routes: Route[] = [];
+  private _routes: Route[] = [
+    {
+      uuid: uuidv4(),
+      address: '192.168.0.0',
+      mask: '255.255.0.0',
+      gateway: '192.168.0.1',
+      interface: 'VPN',
+    },
+    {
+      uuid: uuidv4(),
+      address: '0.0.0.0',
+      mask: '0.0.0.0',
+      gateway: '33.44.32.1',
+      interface: 'ISP',
+    },
+    {
+      uuid: uuidv4(),
+      address: '1.1.1.0',
+      mask: '255.255.255.192',
+      gateway: '1.1.1.1',
+      interface: 'VPN',
+    },
+    {
+      uuid: uuidv4(),
+      address: '192.168.20.16',
+      mask: '255.255.255.240',
+      gateway: '192.168.20.22',
+      interface: 'VPN',
+    },
+    {
+      uuid: uuidv4(),
+      address: '10.1.30.0',
+      mask: '255.255.255.0',
+      gateway: '0.0.0.0',
+      interface: 'Guest',
+    },
+    {
+      uuid: uuidv4(),
+      address: '193.10.149.0',
+      mask: '255.255.255.192',
+      gateway: '0.0.0.0',
+      interface: 'ISP',
+    },
+    {
+      uuid: uuidv4(),
+      address: '192.168.1.0',
+      mask: '255.255.255.0',
+      gateway: '0.0.0.0',
+      interface: 'Home',
+    },
+  ];
+
   private _validMasks: string[] = Ipv4Helper.getMasksArray();
 
   constructor() {}
@@ -165,7 +216,7 @@ export class RoutesStorage {
     );
   }
 
-  public hasRouteForIp(ip: string): ResponseStatus<{via: Route | null; routed: boolean} | never> {
+  public getRouteForIp(ip: string, mostSpecific: boolean = false): ResponseStatus<{via: Route | null; routed: boolean} | never> {
     if (!Ipv4Helper.isIpV4(ip)) {
       return ResponseStatus.createErrorStatus(
         `Invalid IPv4 passed: ${ip}`,
@@ -173,7 +224,22 @@ export class RoutesStorage {
       );
     }
 
-    const viaRoute = _.find(this._routes, route => Ipv4Helper.isIpInNet(ip, route.address, route.mask));
+    const matchingRoutes = this._routes.filter(route => Ipv4Helper.isIpInNet(ip, route.address, route.mask));
+
+    let viaRoute;
+
+    if (mostSpecific) {
+      const byPrefixLength = matchingRoutes.sort((a, b) => {
+        const prefixA = Ipv4Helper.maskToCidr(a.mask);
+        const prefixB = Ipv4Helper.maskToCidr(b.mask);
+
+        return prefixB - prefixA;
+      });
+
+      viaRoute = _.get(byPrefixLength, [0]);
+    } else {
+      viaRoute = _.get(matchingRoutes, [0]);
+    }
 
     if (!viaRoute) {
       return ResponseStatus.createSuccessStatus(
