@@ -19,7 +19,7 @@ useExpressServer(app, {
   routePrefix: '/api',
   controllers: [RoutesController],
   middlewares: [LoggerMiddleware, GlobalErrorHandler],
-  defaultErrorHandler: false
+  defaultErrorHandler: false,
 });
 
 const port = process.env.PORT;
