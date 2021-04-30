@@ -1,9 +1,7 @@
-import {ApplicationError} from './application-error';
-
-export class InvalidMethodError extends ApplicationError {
+export class InvalidMethodError extends Error {
   public readonly name = 'InvalidMethodError';
 
   constructor(message) {
-    super(message || 'Invalid method', 500);
+    super(message || 'Invalid method');
   }
 }
