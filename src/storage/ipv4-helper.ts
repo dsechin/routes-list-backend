@@ -1,4 +1,5 @@
 /* eslint no-bitwise: 0 */
+import _ from 'lodash';
 
 export const ZERO_IP = '0.0.0.0';
 
@@ -37,11 +38,22 @@ export class Ipv4Helper {
       + (b[3]);
   }
 
+  public static binaryStringToIp(str: string): string {
+    return _.map(str.match(/.{8}/g), octet => parseInt(octet, 2)).join('.');
+  }
+
   public static getMasksArray(): string[] {
     const masks: string[] = [];
 
-    for (let mask = ~0; mask & ~(~0 << 29); mask <<= 1) {
-      masks.push(Ipv4Helper.num2ip(mask));
+    for (let i = 0; i < 33; i++) {
+      const digits = []
+        .concat(_.times(i, () => 1))
+        .concat(_.times(32 - i, () => 0));
+
+      const chunks = _.chunk(digits, 8);
+      const binary = chunks.map(item => item.join('')).join('');
+
+      masks.push(Ipv4Helper.binaryStringToIp(binary));
     }
 
     return masks;
@@ -68,25 +80,6 @@ export class Ipv4Helper {
     const maskNum = Ipv4Helper.ip2num(mask);
 
     return Ipv4Helper.num2ip((ipNum & maskNum) | (~maskNum));
-  }
-
-  public static getSubnetSize(ip: string, mask: string): number {
-    const lastAddress = Ipv4Helper.getLastSubnetAddress(ip, mask);
-
-    return Ipv4Helper.ip2num(lastAddress) - Ipv4Helper.ip2num(ip) - 2;
-  }
-
-  public static cidrToMask(cidrNum: number): string {
-    const mask: number[] = [];
-
-    for (let i = 0; i < 4; i++) {
-      const n = Math.min(cidrNum, 8);
-
-      mask.push(256 - Math.pow(2, 8 - n));
-      cidrNum -= n;
-    }
-
-    return mask.join('.');
   }
 
   public static maskToCidr(maskStr: string): number {
