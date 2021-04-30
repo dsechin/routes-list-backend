@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import _ from 'lodash';
 import {Service} from 'typedi';
 import {v4 as uuidv4} from 'uuid';

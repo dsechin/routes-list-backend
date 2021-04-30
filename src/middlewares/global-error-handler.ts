@@ -11,7 +11,7 @@ export class GlobalErrorHandler implements ExpressErrorMiddlewareInterface {
       response.send(
         ResponseStatus.createErrorStatus(
           'JSON parse error',
-          RESPONSE_CODE.ERR_INVALID_JSON
+          RESPONSE_CODE.ERR_INVALID_JSON,
         ),
       );
     } else {
