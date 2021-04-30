@@ -8,6 +8,7 @@
     "lint": "eslint --cache --ext .ts .",
     "lint:fix": "eslint --cache --ext .ts . --fix",
     "prebuild": "npm run lint",
+    "clean": "npx rimraf dist",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node dist/app.js"
