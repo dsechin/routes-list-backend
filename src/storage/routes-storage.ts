@@ -125,8 +125,12 @@ export class RoutesStorage {
     );
   }
 
-  public getAll(): Route[] {
-    return _.cloneDeep(this._routes);
+  public getAll(): ResponseStatus<{routes: Route[]}> {
+    return ResponseStatus.createSuccessStatus(
+      'Routes list',
+      RESPONSE_CODE.ROUTE_LIST_EXISTS,
+      {routes: _.cloneDeep(this._routes)},
+    );
   }
 
   public addRoute(route: Omit<Route, 'uuid'>): ResponseStatus<{uuid} | never> {
