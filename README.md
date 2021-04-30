@@ -84,7 +84,7 @@ interface Response {
 
 #### Создать маршрут (сервер вернет присвоенный UUID)
 
-**POST /api/routes**
+> **POST /api/routes**
 
 Данные запроса:
 
