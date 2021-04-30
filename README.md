@@ -13,16 +13,16 @@ npm install
 npm start
 ```
 
-После этого он будет отвечать на 3333 порту (изменить порт можно, задав переменную окружения `PORT`).
+После этого сервер будет отвечать на `3333` порту (изменить порт можно, задав переменную окружения `PORT`).
 
 ## API:
 
 ```typescript
 interface Response {
   'message': string;
-  'code': number; // в конце документа описаны возможные коды
+  'code': number;         // в конце документа описаны возможные коды
   'successful': boolean;
-  'payload': any; // зависит от запроса; для ответов с 'successful: false' -> 'payload: null'
+  'payload': any;         // зависит от запроса; для ответов с 'successful: false' -> 'payload: null'
 }
 ```
 
@@ -164,7 +164,11 @@ interface Response {
 
 Параметры запроса:
 
-most-specific: boolean – опиционально; если передано значение true,вернется маршрут с [наибольшим совпадающим префиксом](https://en.wikipedia.org/wiki/Longest_prefix_match).
+`most-specific: boolean` – опициональный параметр;
+
+> Если передано значение `true`, вернется маршрут с [наибольшим совпадающим префиксом](https://en.wikipedia.org/wiki/Longest_prefix_match).
+> Есле передано значение `false`, вернется первый маршрут, в подсеть которого попадает `IP` или `code: 201`, если такого маршрута нет.
+
 
 ```
 /api/route/for-ip/1.1.1.1?most-specific=true
