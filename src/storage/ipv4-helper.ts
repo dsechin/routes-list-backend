@@ -77,7 +77,7 @@ export class Ipv4Helper {
   }
 
   public static cidrToMask(cidrNum: number): string {
-    const mask = [];
+    const mask: number[] = [];
 
     for (let i = 0; i < 4; i++) {
       const n = Math.min(cidrNum, 8);

@@ -127,7 +127,7 @@ export class RoutesStorage {
   }
 
   public addRoute(route: Omit<Route, 'uuid'>): ResponseStatus<{uuid} | never> {
-    if (!TRoute.omit('uuid').guard(route)) {
+    if (!TRoute.omit({uuid: true}).check(route)) {
       return ResponseStatus.createErrorStatus(
         'Route object expected',
         RESPONSE_CODE.ERR_ROUTE_OBJECT_EXPECTED,

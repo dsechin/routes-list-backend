@@ -1,11 +1,11 @@
-import {Static, String, Record} from 'runtypes';
+import * as z from 'zod';
 
-export const TRoute = Record({
-  uuid: String,
-  address: String,
-  mask: String,
-  gateway: String,
-  interface: String,
+export const TRoute = z.object({
+  uuid: z.string(),
+  address: z.string(),
+  mask: z.string(),
+  gateway: z.string(),
+  interface: z.string(),
 });
 
-export type Route  = Static<typeof TRoute>;
+export type Route  = z.infer<typeof TRoute>;

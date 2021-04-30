@@ -1,6 +1,7 @@
 {
   "sourceMap": true,
   "compilerOptions": {
+    "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
