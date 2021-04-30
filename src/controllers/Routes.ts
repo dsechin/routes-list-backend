@@ -1,20 +1,23 @@
 import {JsonController, QueryParam, Param, Body, Get, Post, Put, Delete} from 'routing-controllers';
-
+import {Service} from 'typedi';
 import {Route} from '../types';
 import {RoutesStorage} from '../storage/routes-storage';
 
-const routesStorage = new RoutesStorage();
-
 @JsonController()
+@Service()
 export class RoutesController {
+  constructor(
+    private routesStorage: RoutesStorage,
+  ) {}
+
   @Get('/routes')
   getAll() {
-    return routesStorage.getAll();
+    return this.routesStorage.getAll();
   }
 
   @Get('/routes/:uuid')
   getOne(@Param('uuid') uuid: string) {
-    return routesStorage.getByUuid(uuid);
+    return this.routesStorage.getByUuid(uuid);
   }
 
   @Get('/routes/for-ip/:ip')
@@ -22,21 +25,21 @@ export class RoutesController {
     @QueryParam('most-specific') mostSpecific: boolean,
     @Param('ip') ip: string,
   ) {
-    return routesStorage.getRouteForIp(ip, mostSpecific);
+    return this.routesStorage.getRouteForIp(ip, mostSpecific);
   }
 
   @Post('/routes')
   create(@Body() route: Omit<Route, 'uuid'>) {
-    return routesStorage.addRoute(route);
+    return this.routesStorage.addRoute(route);
   }
 
   @Put('/routes/:uuid')
   update(@Param('uuid') uuid: string, @Body({required: true}) route: Partial<Omit<Route, 'uuid'>>) {
-    return routesStorage.updateRoute(uuid, route);
+    return this.routesStorage.updateRoute(uuid, route);
   }
 
   @Delete('/routes/:uuid')
   remove(@Param('uuid') uuid: string) {
-    return routesStorage.removeRoute(uuid);
+    return this.routesStorage.removeRoute(uuid);
   }
 }

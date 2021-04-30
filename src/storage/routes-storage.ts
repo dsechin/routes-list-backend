@@ -1,8 +1,11 @@
+import 'reflect-metadata'
 import _ from 'lodash';
+import {Service} from 'typedi';
 import {v4 as uuidv4} from 'uuid';
 import {RESPONSE_CODE, Route, TRoute, ResponseStatus} from '../types';
 import {Ipv4Helper} from './ipv4-helper';
 
+@Service()
 export class RoutesStorage {
   private _routes: Route[] = [
     {

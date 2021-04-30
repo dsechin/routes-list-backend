@@ -2,11 +2,8 @@ import 'reflect-metadata';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import {useExpressServer} from 'routing-controllers';
-
-import {RoutesController} from './controllers/routes';
-import {GlobalErrorHandler} from './global-error-handler';
-import {LoggerMiddleware} from './logger';
+import {Container} from 'typedi';
+import {useExpressServer, useContainer} from 'routing-controllers';
 
 const app = express();
 
@@ -15,10 +12,12 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+useContainer(Container);
+
 useExpressServer(app, {
   routePrefix: '/api',
-  controllers: [RoutesController],
-  middlewares: [LoggerMiddleware, GlobalErrorHandler],
+  controllers: [__dirname + '/controllers/*.ts'],
+  middlewares: [__dirname + '/middlewares/*.ts'],
   defaultErrorHandler: false,
 });
 
