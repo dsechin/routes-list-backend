@@ -5,12 +5,29 @@ import cors from 'cors';
 import {Container} from 'typedi';
 import {useExpressServer, useContainer} from 'routing-controllers';
 
+import * as log4js from 'log4js'
+
+log4js.configure({
+  appenders: { out: { type: 'stdout', layout: { type: 'coloured' } } },
+  categories: { default: { appenders: ['out'], level: 'info' } }
+})
+
+const logger = log4js.getLogger('default');
 const app = express();
 
 dotenv.config();
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  log4js.connectLogger(
+    logger,
+    {
+      level: log4js.levels.INFO.levelStr,
+      format: (req, res, format) => format(`:remote-addr :method :url ${JSON.stringify(req.body)}`),
+    },
+  ),
+);
 
 useContainer(Container);
 
@@ -29,4 +46,4 @@ useExpressServer(app, {
 
 const port = process.env.PORT || 3333;
 
-app.listen(port, () => console.log(`Running on port ${port}`));
+app.listen(port, () => logger.info(`Running on port ${port}`));
