@@ -20,7 +20,7 @@ export class RoutesController {
     return this.routesStorage.getByUuid(uuid);
   }
 
-  @Get('/routes/for-ip/:ip')
+  @Get('/route/for-ip/:ip')
   getRouteForIp(
     @QueryParam('most-specific') mostSpecific: boolean,
     @Param('ip') ip: string,
