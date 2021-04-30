@@ -5,12 +5,12 @@ import cors from 'cors';
 import {Container} from 'typedi';
 import {useExpressServer, useContainer} from 'routing-controllers';
 
-import * as log4js from 'log4js'
+import * as log4js from 'log4js';
 
 log4js.configure({
-  appenders: { out: { type: 'stdout', layout: { type: 'coloured' } } },
-  categories: { default: { appenders: ['out'], level: 'info' } }
-})
+  appenders: {out: {type: 'stdout', layout: {type: 'coloured'}}},
+  categories: {default: {appenders: ['out'], level: 'info'}},
+});
 
 const logger = log4js.getLogger('default');
 const app = express();
