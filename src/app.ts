@@ -16,8 +16,14 @@ useContainer(Container);
 
 useExpressServer(app, {
   routePrefix: '/api',
-  controllers: [__dirname + '/controllers/*.ts'],
-  middlewares: [__dirname + '/middlewares/*.ts'],
+  controllers: [
+    __dirname + '/controllers/*.ts', // dev
+    __dirname + '/controllers/*.js', // prod
+  ],
+  middlewares: [
+    __dirname + '/middlewares/*.ts', // dev
+    __dirname + '/controllers/*.js', // prod
+  ],
   defaultErrorHandler: false,
 });
 
