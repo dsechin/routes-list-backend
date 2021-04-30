@@ -14,13 +14,26 @@ export class GlobalErrorHandler implements ExpressErrorMiddlewareInterface {
           RESPONSE_CODE.ERR_INVALID_JSON,
         ),
       );
-    } else {
-      response.send(
-        ResponseStatus.createErrorStatus(
-          'Unknown error occured',
-          RESPONSE_CODE.ERR_UNKNOWN,
-        ),
-      );
+    }
+
+    switch (error.name) {
+      case 'InvalidMethodError':
+        response.send(
+          ResponseStatus.createErrorStatus(
+            'Unsupported HTTP method',
+            RESPONSE_CODE.ERR_INVALID_METHOD,
+          ),
+        );
+        break;
+
+      default:
+        response.send(
+          ResponseStatus.createErrorStatus(
+            'Unknown error occured',
+            RESPONSE_CODE.ERR_UNKNOWN,
+          ),
+        );
+        break;
     }
 
     next();
